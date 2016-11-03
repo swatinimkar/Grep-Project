@@ -2,6 +2,8 @@
 #include "commands.h"
 
 
+// List all the files from directories and sub directories recursively
+
 void list_dir(char *dir_name, char *pattern) {
 	DIR *d;
 	int length = 0;
@@ -10,7 +12,7 @@ void list_dir(char *dir_name, char *pattern) {
 	d = opendir(dir_name);
 
 	if(!d) {
-		fprintf(stderr,"Cannot open directory '%s': %s\n",dir_name,strerror(errno));
+		//fprintf(stderr,"Cannot open directory '%s': %s\n",dir_name,strerror(errno));
 		exit(1);
 	}
 
@@ -39,9 +41,12 @@ void list_dir(char *dir_name, char *pattern) {
 			strcat(filepath,d_name);
 			
 			filepath[length] = '\0';
-
+			
+			//printf("%s\n",filepath);
+			
 			if(checkFile(filepath) == 1 && strcmp(get_filename_ext(d_name),"o") != 0) {
 				match_pattern_recursive(filepath,d_name,pattern);
+				//printf("%s\n",filepath);
 			}
 			
 		}
@@ -67,10 +72,13 @@ void list_dir(char *dir_name, char *pattern) {
 	}
 }
 
+// Match simple string pattern and regular expression pattern
+
 void match_pattern(char *argv[])
 {
     int fd,r,j=0;
-    char temp,line[100];
+    int size = 100;
+    char temp,*line=(char *)malloc(size);
     int rv;
     regex_t exp;
     char *pattern;
@@ -88,17 +96,25 @@ void match_pattern(char *argv[])
 		{
 		    if(temp!='\n')
 		    {
+			//line = (char *)malloc(sizeof(char)*1);
 		        line[j]=temp;
 		        j++;
+			
+			if(j>=size-1) {
+				size= size*2;
+				line = (char *)realloc(line,size);
+			}			
+
 		    }
 		    else
 		    {
 
 		        line[j]='\0';
 
+			//printf("%s",line);
+
 		        if(match(&exp, line)==1)
 		            printf("%s\n",line);
-		        memset(line,0,sizeof(line));
 		        j=0;
 		    }
 
@@ -106,17 +122,20 @@ void match_pattern(char *argv[])
 	    }   
 
     }
-
+    free(line);
 }
+
+// This function will match string for recursive search
 
 void match_pattern_recursive(char *filepath,char *filename, char *pat)
 {
     int fd,r,j=0;
-    char temp,line[1000];
+    int size = 100;
+    char temp,*line=(char *)malloc(size);
     int k=0;
     char *pattern;
     int i;
-    char *result[1000];
+    char *result[100000];
     char fpath[1000];
 
     for(i=0;filepath[i]!='\0';i++)
@@ -133,6 +152,12 @@ void match_pattern_recursive(char *filepath,char *filename, char *pat)
 	    {
 	        line[j]=temp;
 	        j++;
+
+		if(j>=size-1) {
+			size= size*2;
+			line = (char *)realloc(line,size);
+		}
+
 	    }
 	    else
 	    {
@@ -163,13 +188,18 @@ void match_pattern_recursive(char *filepath,char *filename, char *pat)
 	printf("%s\n",result[i]);
     }
 
+    //free(line);
+
 }
 
+
+// This function will show the position and length of search pattern in input file
 
 void show_position_match_pattern(char *argv[])
 {
     int fd,r,j=0;
-    char temp,line[100];
+    int size = 100;
+    char temp,*line=(char *)malloc(size);
     int rv;
     regex_t exp;
     char *pattern;
@@ -193,6 +223,12 @@ void show_position_match_pattern(char *argv[])
 		    {
 		        line[j]=temp;
 		        j++;
+
+			if(j>=size-1) {
+				size= size*2;
+				line = (char *)realloc(line,size);
+			}
+
 		    }
 		    else
 		    {
@@ -209,12 +245,18 @@ void show_position_match_pattern(char *argv[])
 
     }
 
+    free(line);
+
 }
+
+// This function will perform insensitive search in input file and display the output
 
 void match_pattern_case_sensitive(char *argv[]) {
 
     int fd,r,j=0,p;
-    char temp,line[100],lower_char[100],lower_pattern[100];
+    int size = 100;
+    char temp,*line=(char *)malloc(size);
+    char *lower_char=(char *)malloc(size),lower_pattern[100];
     char *pattern;
 
     pattern = extractPattern(argv[2]);
@@ -228,6 +270,13 @@ void match_pattern_case_sensitive(char *argv[]) {
                 line[j]=temp;
 		lower_char[j] = tolower(line[j]);
                 j++;
+
+		if(j>=size-1) {
+			size= size*2;
+			line = (char *)realloc(line,size);
+			lower_char = (char *)realloc(lower_char,size);
+		}
+
             }
             else
             {
@@ -245,14 +294,22 @@ void match_pattern_case_sensitive(char *argv[]) {
             }
 
         }
-    }   
+    }  
+
+    free(line);
+    free(lower_char);
+ 
 }
 
+
+// This function will search for the whole word case insensitively
 
 void match_pattern_whole_word_cs(char *argv[]) {
 
     int fd,r,j=0,p;
-    char temp,line[100],lower_char[100],lower_pattern[100];
+    int size = 100;
+    char temp,*line=(char *)malloc(size);
+    char *lower_char=(char *)malloc(size),lower_pattern[100];
     char *pattern;
 
     pattern = extractPattern(argv[2]);
@@ -266,6 +323,13 @@ void match_pattern_whole_word_cs(char *argv[]) {
                 line[j]=temp;
 		lower_char[j] = tolower(line[j]);
                 j++;
+
+		if(j>=size-1) {
+			size= size*2;
+			line = (char *)realloc(line,size);
+			lower_char = (char *)realloc(lower_char,size);
+		}
+
             }
             else
             {
@@ -283,13 +347,21 @@ void match_pattern_whole_word_cs(char *argv[]) {
             }
 
         }
-    }   
+    }  
+
+    free(line);
+    free(lower_char);
+ 
 }
+
+// This function will match whole world case insensitively in multiple input file
 
 void match_pattern_whole_word_cs_files(char *argv[],int filecount) {
 
     int fd,r,j=0,p;
-    char temp,line[100],lower_char[100],lower_pattern[100];
+    int size = 100;
+    char temp,*line=(char *)malloc(size);
+    char *lower_char=(char *)malloc(size),lower_pattern[100];
     char *pattern;
     int i;
 
@@ -307,6 +379,13 @@ void match_pattern_whole_word_cs_files(char *argv[],int filecount) {
 		        line[j]=temp;
 			lower_char[j] = tolower(line[j]);
 		        j++;
+
+			if(j>=size-1) {
+				size= size*2;
+				line = (char *)realloc(line,size);
+				lower_char = (char *)realloc(lower_char,size);
+			}
+
 		    }
 		    else
 		    {
@@ -326,14 +405,20 @@ void match_pattern_whole_word_cs_files(char *argv[],int filecount) {
 		}
 	    }   
     }
+
+    free(line);
+    free(lower_char);
+
 }
 
 
+// This function will search for whole word in input file
 
 void match_pattern_whole_word(char *argv[]) {
 
     int fd,r,j=0;
-    char temp,line[100];
+    int size = 100;
+    char temp,*line=(char *)malloc(size);
     char *pattern;
 
     pattern = extractPattern(argv[2]);
@@ -346,6 +431,12 @@ void match_pattern_whole_word(char *argv[]) {
             {
                 line[j]=temp;
                 j++;
+
+		if(j>=size-1) {
+			size= size*2;
+			line = (char *)realloc(line,size);
+		}
+
             }
             else
             {
@@ -360,14 +451,18 @@ void match_pattern_whole_word(char *argv[]) {
 
         }
     }   
+    free(line);
+
 }
 
 
+// This function match string pattern in multiple file
 
 void match_pattern_files(char *argv[],int filecount)
 {
     int fd,r,j=0;
-    char temp,line[100];
+    int size = 100;
+    char temp,*line=(char *)malloc(size);
     int i;
 	
     for(i=2;i<filecount;i++) {
@@ -380,6 +475,12 @@ void match_pattern_files(char *argv[],int filecount)
 		    {
 			line[j]=temp;
 			j++;
+
+			if(j>=size-1) {
+				size= size*2;
+				line = (char *)realloc(line,size);
+			}
+
 		    }
 		    else
 		    {
@@ -393,13 +494,17 @@ void match_pattern_files(char *argv[],int filecount)
 		}
 	}   
     }
+    free(line);
 }
 
+// This function match string pattern in multiple file case insensitively
 
 void match_pattern_files_cs(char *argv[],int filecount)
 {
     int fd,r,j=0,p;
-    char temp,line[100],lower_char[100],lower_pattern[100];
+    int size = 100;
+    char temp,*line=(char *)malloc(size);
+    char *lower_char=(char *)malloc(size),lower_pattern[100];
     int i;
 	
     for(i=3;i<filecount;i++) {
@@ -413,6 +518,13 @@ void match_pattern_files_cs(char *argv[],int filecount)
 			line[j]=temp;
 			lower_char[j] = tolower(line[j]);
 			j++;
+
+			if(j>=size-1) {
+				size= size*2;
+				line = (char *)realloc(line,size);
+				lower_char = (char *)realloc(lower_char,size);
+			}
+
 		    }
 		    else
 		    {
@@ -433,13 +545,20 @@ void match_pattern_files_cs(char *argv[],int filecount)
 		}
 	}   
     }
+
+    free(line);
+    free(lower_char);
+
 }
 
+
+// This function will only print file names of matched pattern
 
 void match_pattern_file_names(char *argv[],int filecount)
 {
     int fd,r,j=0,k=0;
-    char temp,line[100];
+    int size = 100;
+    char temp,*line=(char *)malloc(size);
     int i;
     char *result[100];
     char file_name_len;
@@ -455,6 +574,12 @@ void match_pattern_file_names(char *argv[],int filecount)
 		    {
 			line[j]=temp;
 			j++;
+
+			if(j>=size-1) {
+				size= size*2;
+				line = (char *)realloc(line,size);
+			}
+
 		    }
 		    else
 		    {
@@ -489,13 +614,18 @@ void match_pattern_file_names(char *argv[],int filecount)
 	printf("%s\n",result[i]);
     }
 
+    free(line);
 
 }
+
+
+// This function will print the lines which dosen't matched with pattern
 
 void get_content_excluding_pattern(char *argv[]) {
 
     int fd,r,j=0;
-    char temp,line[100];
+    int size = 100;
+    char temp,*line=(char *)malloc(size);
     char *pattern;
 
     pattern = extractPattern(argv[2]);
@@ -508,26 +638,38 @@ void get_content_excluding_pattern(char *argv[]) {
             {
                 line[j]=temp;
                 j++;
+
+		if(j>=size-1) {
+			size= size*2;
+			line = (char *)realloc(line,size);
+		}
+
             }
             else
             {		
 		line[j]='\0';
 
                 if(strstr(line,pattern)==NULL)
-                    printf("%s\n",line);
+		    if(strstr(line," ")!=NULL)
+                    	printf("%s\n",line);
                 j=0;
             }
 
         }
     }
 
+    free(line);
+
 }
 
+
+// This function will print the lines which dosen't matched with pattern in multiple files
 
 void get_content_excluding_pattern_multi(char *argv[],int filescount) {
 
     int fd,r,j=0;
-    char temp,line[100];
+    int size = 100;
+    char temp,*line=(char *)malloc(size);
     char *pattern;
     int i;
 
@@ -543,27 +685,39 @@ void get_content_excluding_pattern_multi(char *argv[],int filescount) {
 		    {
 		        line[j]=temp;
 		        j++;
+
+			if(j>=size-1) {
+				size= size*2;
+				line = (char *)realloc(line,size);
+			}
+
 		    }
 		    else
 		    {
 			line[j] = '\0';
 		
 		        if(strstr(line,pattern)==NULL)
-		            printf("%s:%s\n",argv[i],line);
+				if(strstr(line," ")!=NULL)
+		            		printf("%s:%s\n",argv[i],line);
 		        j=0;
 		    }
 
 		}
 	    }
     }
+
+    free(line);
+
 }
 
 
+// This function will print count of matched pattern
 
 void count_matching_pattern(char *argv[]) {
 
     int fd,r,j=0;
-    char temp,line[100];
+    int size = 100;
+    char temp,*line=(char *)malloc(size);
     char *pattern;
     int count_matched = 0;
 
@@ -576,7 +730,13 @@ void count_matching_pattern(char *argv[]) {
             if(temp!='\n')
             {
                 line[j]=temp;
-	            j++;
+	        j++;
+
+		if(j>=size-1) {
+			size= size*2;
+			line = (char *)realloc(line,size);
+		}
+
             }
             else
             {
@@ -589,16 +749,21 @@ void count_matching_pattern(char *argv[]) {
 
         }
 
-	printf("Count Matched: %d",count_matched);	
+	printf("%d\n",count_matched);	
 
     }
 
+    free(line);
+
 }
+
+// This function will print line number along with the line of matched pattern.
 
 void show_matched_line_number(char *argv[]) {
 
     int fd,r,j=0;
-    char temp,line[100];
+    int size = 100;
+    char temp,*line=(char *)malloc(size);
     char *pattern;
     int lines_count = 1;	
 
@@ -611,7 +776,13 @@ void show_matched_line_number(char *argv[]) {
             if(temp!='\n')
             {
                 line[j]=temp;
-	            j++;
+	        j++;
+
+		if(j>=size-1) {
+			size= size*2;
+			line = (char *)realloc(line,size);
+		}
+
             }
             else
             {
@@ -627,14 +798,18 @@ void show_matched_line_number(char *argv[]) {
 
     }
 
+    free(line);
+
 }
 
 
+// This function will print count of lines which dosen't matched with the pattern
 
 void count_matching_pattern_invert(char *argv[]) {
 
     int fd,r,j=0;
-    char temp,line[100];
+    int size = 100;
+    char temp,*line=(char *)malloc(size);
     char *pattern;
     int count_matched = 0;
 
@@ -647,7 +822,13 @@ void count_matching_pattern_invert(char *argv[]) {
             if(temp!='\n')
             {
                 line[j]=temp;
-	            j++;
+	        j++;
+
+		if(j>=size-1) {
+			size= size*2;
+			line = (char *)realloc(line,size);
+		}
+
             }
             else
             {
@@ -660,17 +841,22 @@ void count_matching_pattern_invert(char *argv[]) {
 
         }
 
-	printf("Count Not Matched: %d",count_matched);	
+	printf("%d\n",count_matched);	
 
     }
+
+    free(line);
 
 }
 
 
+// This function print the lines excluding muliple patterns
+
 void get_content_excluding_patterns(char *file,char *pattern) {
 
     int fd,r,j=0;
-    char temp,line[100];
+    int size = 100;
+    char temp,*line=(char *)malloc(size);
     int rv;
     regex_t exp;
 
@@ -689,21 +875,33 @@ void get_content_excluding_patterns(char *file,char *pattern) {
 		    {
 			line[j]=temp;
 			j++;
+
+			if(j>=size-1) {
+				size= size*2;
+				line = (char *)realloc(line,size);
+			}
+
 		    }
 		    else
 		    {
 			line[j] = '\0';
 		
 			if(match(&exp, line)!=1)
-			    printf("%s\n",line);							
+				if(strstr(line," ")!=NULL)
+			    		printf("%s\n",line);							
 			j=0;
 		    }
 
 		}
 	    }
     }
+
+    free(line);
+
 }
 
+
+// This function will display the help of the command
 
 void displayHelp()
 {
@@ -723,6 +921,9 @@ void displayHelp()
   printf("  -o : If used with -b show position of every matched line\n");
   printf("  -r : Search pattern recursively into directories and sub directories.\n");
 }
+
+
+// This function will display the usage of command.
 
 void usage() {
 	  printf("Usage: sngrep [[arguments] pattern | FILE ] [FILES] ...\n");

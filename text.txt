@@ -1,0 +1,43 @@
+ C Basics
+  Before we embark on a brief tour of C's basic syntax and structure we offer a brief history of C and consider the characteristics of the C language.
+
+In the remainder of the Chapter we will look at the basic aspects of C programs such as C program structure, the declaration of variables, data types and operators. We will assume knowledge of a high level language, such as PASCAL.
+
+It is our intention to provide a quick guide through similar C principles to most high level languages. Here the syntax may be slightly different but the concepts exactly the same.
+
+C does have a few surprises:
+
+    Many High level languages, like PASCAL, are highly disciplined and structured.
+    However beware -- C is much more flexible and free-wheeling. This freedom gives C much more power that experienced users can employ. The above example below (mystery.c) illustrates how bad things could really get. 
+
+History of C
+
+The milestones in C's development as a language are listed below:
+
+    UNIX developed c. 1969 -- DEC PDP-7 Assembly Language
+    BCPL -- a user friendly OS providing powerful development tools developed from BCPL. Assembler tedious long and error prone.
+    A new language ``B'' a second attempt. c. 1970.
+    A totally new language ``C'' a successor to ``B''. c. 1971
+    By 1973 UNIX OS almost totally written in ``C''. 
+
+Characteristics of C
+
+We briefly list some of C's characteristics that define the language and also have lead to its popularity as a programming language. Naturally we will be studying many of these aspects throughout the course.
+
+    Small size
+    Extensive use of function calls
+    Loose typing -- unlike PASCAL
+    Structured language
+    Low level (BitWise) programming readily available
+    Pointer implementation - extensive use of pointers for memory, array, structures and functions. 
+
+C has now become a widely used professional language for various reasons.
+
+    It has high-level constructs.
+    It can handle low-level activities.
+    It produces efficient programs.
+    It can be compiled on a variety of computers. 
+
+Its main drawback is that it has poor error detection which can make it off putting to the beginner. However diligence in this matter can pay off handsomely since having learned the rules of C we can break them. Not many languages allow this. This if done properly and carefully leads to the power of C programming Its main drawback is that it has poor error detection which can make it off putting to the beginner. However diligence in this matter can pay off handsomely since having learned the rules of C we can break them. Not many languages allow this. This if done properly and carefully leads to the power of C programming.
+
+Its main drawback is that it has poor error detection which can make it off putting to the beginner. However diligence in this matter can pay off handsomely since having learned the rules of C we can break them. Not many languages allow this. This if done properly and carefully leads to the power of C programming.
