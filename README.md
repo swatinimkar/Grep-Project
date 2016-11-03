@@ -1,6 +1,6 @@
 # SNGREP created by Swati Nimbolkar
 This is linux GREP command implementation in C.
-# Features
+# Description
 I have included the following features of GREP in my project
 - Search for entered string in file.
 - Check the entered pattern in multiple files.
