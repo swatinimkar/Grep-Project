@@ -577,7 +577,7 @@ void match_pattern_file_names(char *argv[],int filecount)
     char temp,*line=(char *)malloc(size);
     int i;
     char *result[100];
-    char file_name_len;
+    int file_name_len;
 	
     for(i=3;i<filecount;i++) {
 	j=0;
@@ -603,9 +603,9 @@ void match_pattern_file_names(char *argv[],int filecount)
 			line[j] = '\0';
 
 			if(strstr(line,argv[2])!=NULL) {
-			    result[k] = (char *)malloc(sizeof(char)*file_name_len); 
+			    result[k] = malloc(sizeof(char)*file_name_len); 
 			    memcpy(result[k],argv[i],file_name_len); 
-			    //result[k][file_name_len] = '\0';
+			    result[k][file_name_len] = '\0';
 			    k++;
 			}
 			j=0;
