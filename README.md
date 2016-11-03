@@ -1,4 +1,4 @@
-# SNGREP
+# GREP
 
 #### Swati Nimbolkar - 141603007
 
