@@ -2,6 +2,7 @@
 
 # Description
 This is linux GREP command implementation in C.
+
 I have included the following features of GREP in my project
 - Search for entered string in file.
 - Check the entered pattern in multiple files.
