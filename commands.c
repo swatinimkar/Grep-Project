@@ -18,7 +18,6 @@
 #include "functions.h"
 #include "commands.h"
 
-
 // List all the files from directories and sub directories recursively
 
 void list_dir(char *dir_name, char *pattern) {
