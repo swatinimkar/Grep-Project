@@ -1,4 +1,5 @@
-# SNGREP created by Swati Nimbolkar
+# SNGREP
+## Swati Nimbolkar - 141603007
 
 # Description
 This is linux GREP command implementation in C.
